@@ -1,0 +1,43 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "C:\\Users\\ragha\\Desktop\\RELAYER SERVICE\\contracts\\RelayerService.sol": {
+      "lastModificationDate": 1684561358130,
+      "contentHash": "5d89b63c521317ae69ac2d36ae2567f8",
+      "sourceName": "contracts/RelayerService.sol",
+      "solcConfig": {
+        "version": "0.8.0",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC20",
+        "MetaTransactionReceiver",
+        "RelayerService",
+        "TargetSmartContract"
+      ]
+    }
+  }
+}

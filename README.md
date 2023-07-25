@@ -1,106 +1,86 @@
-Overview
-This repository contains a collection of Solidity smart contracts for token transfers and meta-transactions. It includes the following contracts:
+# Relayer-Service
 
-MetaTransactionReceiver: Implements the IERC20 interface and provides functionality for processing user transactions and executing token transfers.
+This repository contains multiple smart contracts implemented in Solidity.
 
-TargetSmartContract: Implements the IERC20 interface and provides basic token transfer functionality.
+## MetaTransactionReceiver Smart Contract
 
-RelayerService: Allows users to submit batched transactions that will be executed on target contracts.
+### Description
 
-Contracts
-MetaTransactionReceiver
-This contract implements the IERC20 interface and provides the following functions:
+The `MetaTransactionReceiver` smart contract implements the `IERC20` interface and allows users to interact with ERC-20 tokens. It provides functionalities to handle user transactions and manage token transfers and allowances.
 
-processUserTransaction(address user, uint256 amount)
-Description: Handles a user transaction by updating the user's balance.
-Parameters:
-user: The address of the user.
-amount: The amount of tokens to process.
-Visibility: External
+### Contract Details
 
-transfer(address recipient, uint256 amount) returns (bool)
-Description: Transfers tokens from the sender's account to the recipient's account.
-Parameters:
-recipient: The address of the recipient.
-amount: The amount of tokens to transfer.
-Returns: true if the transfer is successful, otherwise reverts.
-Visibility: External
+- **Solidity Version Compatibility**: ^0.8.0
+- **License**: MIT
 
-approve(address spender, uint256 amount) returns (bool)
-Description: Approves a spender to spend tokens on behalf of the sender.
-Parameters:
-spender: The address of the spender.
-amount: The amount of tokens to approve.
-Returns: true if the approval is successful, otherwise reverts.
-Visibility: External
+### State Variables
 
-transferFrom(address sender, address recipient, uint256 amount) returns (bool)
-Description: Transfers tokens from the sender's account to the recipient's account on behalf of a spender.
-Parameters:
-sender: The address of the sender.
-recipient: The address of the recipient.
-amount: The amount of tokens to transfer.
-Returns: true if the transfer is successful, otherwise reverts.
-Visibility: External
+- `balances` (mapping): Tracks the token balance of each user.
+- `allowances` (mapping): Tracks the approved allowances for each user to spend tokens on their behalf.
 
-TargetSmartContract
-This contract implements the IERC20 interface and provides basic token transfer functionality.
+### Functions
 
-transfer(address recipient, uint256 amount) returns (bool)
-Description: Transfers tokens from the sender's account to the recipient's account.
-Parameters:
-recipient: The address of the recipient.
-amount: The amount of tokens to transfer.
-Returns: true if the transfer is successful, otherwise reverts.
-Visibility: External
+1. `processUserTransaction(address user, uint256 amount) external`: Allows processing user transactions and updating their token balances.
 
-approve(address spender, uint256 amount) returns (bool)
-Description: Approves a spender to spend tokens on behalf of the sender.
-Parameters:
-spender: The address of the spender.
-amount: The amount of tokens to approve.
-Returns: true if the approval is successful, otherwise reverts.
-Visibility: External
+2. `transfer(address recipient, uint256 amount) external override returns (bool)`: Implements the transfer of tokens from the sender to the recipient.
 
-transferFrom(address sender, address recipient, uint256 amount) returns (bool)
-Description: Transfers tokens from the sender's account to the recipient's account on behalf of a spender.
-Parameters:
-sender: The address of the sender.
-recipient: The address of the recipient.
-amount: The amount of tokens to transfer.
-Returns: true if the transfer is successful, otherwise reverts.
-Visibility: External
+3. `approve(address spender, uint256 amount) external override returns (bool)`: Implements the approval of allowances for a spender to spend tokens on behalf of the sender.
 
-RelayerService
-This contract enables users to submit batched transactions to be executed on target contracts.
+4. `transferFrom(address sender, address recipient, uint256 amount) external override returns (bool)`: Implements the transfer of tokens from the sender to the recipient on behalf of the sender's approved allowance.
 
-submitUserTransaction(address targetContract, bytes data)
-Description: Submits a user transaction to be executed on a target contract.
-Parameters:
-targetContract: The address of the target contract.
-data: The transaction data.
-Visibility: External
+## TargetSmartContract Smart Contract
 
-sendBatch()
-Description: Executes a batch of user transactions on target contracts.
-Conditions: The batch send interval must have passed since the last batch was sent.
-Visibility: External
+### Description
 
-Compilation and Deployment
-To compile and access these smart contracts, you can use the Hardhat tool. Follow the steps below:
+The `TargetSmartContract` smart contract also implements the `IERC20` interface and allows users to interact with ERC-20 tokens. It provides functionalities to manage token transfers and allowances.
 
-1.Install Hardhat: Make sure you have Node.js and npm installed on your machine. Run the following command to install Hardhat globally:
-npm install -g hardhat
+### Contract Details
 
-2.Compile Contracts: Run the following command to compile the contracts:
-npx hardhat compile
+- **Solidity Version Compatibility**: ^0.8.0
+- **License**: MIT
 
-3.Deploy the Contracts: Run the deployment script with the following command:
-npx hardhat run scripts/deploy.ts --network <network_name>
+### State Variables
 
-4. Access the Contracts: Once the contracts are deployed, you can interact with them using various Ethereum tools, such as web3.js or ethers.js. Use the contract addresses and ABIs provided during deployment to instantiate contract instances and call their functions.
+- `balances` (mapping): Tracks the token balance of each user.
+- `allowances` (mapping): Tracks the approved allowances for each user to spend tokens on their behalf.
 
-License
-This project is licensed under the MIT License. You can find the license text in the provided SPDX-License-Identifier comment at the beginning of each smart contract file.
+### Functions
 
+1. `transfer(address recipient, uint256 amount) external override returns (bool)`: Implements the transfer of tokens from the sender to the recipient.
 
+2. `approve(address spender, uint256 amount) external override returns (bool)`: Implements the approval of allowances for a spender to spend tokens on behalf of the sender.
+
+3. `transferFrom(address sender, address recipient, uint256 amount) external override returns (bool)`: Implements the transfer of tokens from the sender to the recipient on behalf of the sender's approved allowance.
+
+## RelayerService Smart Contract
+
+### Description
+
+The `RelayerService` smart contract enables the submission and batch execution of user transactions on target smart contracts. The contract batches and executes user transactions in intervals to optimize gas usage.
+
+### Contract Details
+
+- **Solidity Version Compatibility**: ^0.8.0
+- **License**: MIT
+
+### State Variables
+
+- `userTransactions` (array of `UserTransaction` struct): Stores the user transactions to be executed in batches.
+- `lastBatchSentTime` (uint256): Records the timestamp of the last batch execution.
+
+### Structs
+
+1. `UserTransaction`: Represents a user transaction with the following properties:
+   - `user` (address): The address of the user initiating the transaction.
+   - `targetContract` (address): The address of the target smart contract where the transaction will be executed.
+   - `data` (bytes): The transaction data to be executed on the target contract.
+
+### Functions
+
+1. `submitUserTransaction(address targetContract, bytes memory data) external`: Allows users to submit their transactions for batch execution.
+
+2. `sendBatch() external`: Executes a batch of user transactions in intervals based on gas optimization. The function removes processed transactions from the list and shifts remaining transactions to the beginning of the array to trim the array and remove empty elements.
+
+## Note
+
+This documentation provides an overview of the three smart contracts - `MetaTransactionReceiver`, `TargetSmartContract`, and `RelayerService`. Before deploying or interacting with any smart contract, it is crucial to conduct a thorough code review, audit the contract's security, and understand the implications of each function. The contracts handle ERC-20 token interactions and user transaction batching to optimize gas usage and efficiency in token transfers and allowances.
